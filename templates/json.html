@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>json</title>
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/jquery-1.11.0.js"></script>
+    <script language="javascript" type="text/javascript">
+        function change(currentIndex) {
+            var cal;
+            var myselect = document.getElementsByClassName("food_num");
+            {#var option_value=myselect[0].options[index].value;#}
+            var total = document.getElementById("total_cal");
+            var health = document.getElementById("health");
+            var total_cal = document.getElementById("total_cal").innerText;
+            $.get('/detailInformation' + myselect[currentIndex].id + '/', function (list) {
+                var index = myselect[currentIndex].selectedIndex;
+                {#alert(index);#}
+                cal = list.data.calories;
+                {#alert(cal);#}
+                total_cal = parseInt(total_cal) + index * cal;
+                {#alert(total_cal);#}
+                total.innerHTML = total_cal;
+                {#alert(cal);#}
+                var total_text = document.getElementById("total_cal").innerText;
+                {#alert(total_text);#}
+                if (total_text == 0) {
+                    health.style.backgroundColor = "aliceblue";
+                } else if (total_text < 600) {
+                    health.style.backgroundColor = "yellow";
+                } else if (total_text >= 600 && total_text < 800) {
+                    health.style.backgroundColor = "green";
+                } else if (total_text >= 800) {
+                    health.style.backgroundColor = "red";
+                }
+                currentIndex++;
+                if (currentIndex >= myselect.length) {
+                    return;
+                } else {
+                    change(currentIndex);
+                }
+            })
+        }
+
+        function LoopAjax() {
+            var currentIndex = 0;
+            {#var total_cal = document.getElementById("total_cal").innerText;#}
+            var total = document.getElementById("total_cal");
+            total.innerHTML = 0;
+            change(currentIndex);
+        }
+    </script>
+</head>
+<body>
+<div align="right"></div>
+<div>
+    <h2>Input text:{{ foodText }}</h2>
+    {% for food in json_result_list %}
+        <h2><a href="/showdetail{{ food.itemID }}">{{ food.name }}</a>: &nbsp; Food number:<select
+                id="{{ food.itemID }}" class="food_num" onchange="LoopAjax()">
+            <option value="0" selected>0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select></h2>
+        <div id="detail_information">
+            <h3>Food details ：</h3>
+            <li>Food category:{{ food.category }}</li>
+            <br>
+            <li>Food energy{{ food.description }}</li>
+        </div>
+    {% endfor %}
+    <h1>Total cal: &nbsp;&nbsp;&nbsp;<span id="total_cal">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        Health level:
+        <button id="health" style="background-color: aliceblue; width: 100px; height: 50px"></button>
+    </h1>
+</div>
+
+</body>
+</html>

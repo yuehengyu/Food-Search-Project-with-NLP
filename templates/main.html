@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Food Submit</title>
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/jquery-1.11.0.js"></script>
+    <script language="javascript" type="text/javascript">
+        function textSub() {
+            document.form1.action='/showJson/';
+            document.form1.submit();
+        }
+        function voiceSub() {
+            document.form1.action='/inputVoice/';
+            document.form1.submit();
+            var voiceMsg=document.getElementById('voiceMsg');
+            var textMsg=document.getElementById('textMsg');
+            voiceMsg.style.display="block";
+            textMsg.style.display="none";
+        }
+    </script>
+</head>
+<body>
+<form method="post" action="" name="form1">
+    <div align="center">
+        <textarea cols="50" rows="10" name="food_text"> </textarea><br>
+        <input type="button" value="submit" onclick="textSub()">
+        <input type="button" value="Voice Input" onclick="voiceSub()">
+    </div>
+    <br><br><br>
+    <div id="voiceMsg" align="center" style="display: none"><span>Now You have 10 seconds to tell us what food you want.</span></div>
+</form>
+<div id="textMsg" align="center" style="display: block">If you use text input,You need to add punctuation to distinguish between different foods.<br>Such as "meat,apple,banana"</div>
+</body>
+</html>
